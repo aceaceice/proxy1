@@ -1,0 +1,11 @@
+{
+  "name": "proxy4",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "http": "^0.0.1-security",
+    "url": "^0.11.0"
+  }
+}
