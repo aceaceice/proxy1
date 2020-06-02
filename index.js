@@ -32,19 +32,9 @@ const executeRequest = (options, clientRequest, clientResponse) => {
       externalResponse.statusCode,
       externalResponse.headers
     );
-    externalResponse.on("data", (chunk) => {
-      clientResponse.write(chunk);
-    });
-    externalResponse.on("end", () => {
-      clientResponse.end();
-    });
+    externalResponse.pipe(clientResponse, { end: true });
   });
-  clientRequest.on("data", (chunk) => {
-    externalRequest.write(chunk);
-  });
-  clientRequest.on("end", () => {
-    externalRequest.end();
-  });
+  clientRequest.pipe(externalRequest, { end: true });
 };
 const server = http.createServer(parseIncomingRequest);
 server.listen(5000);
