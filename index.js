@@ -5,14 +5,14 @@ const { logger } = require("./utils");
 const { allowedFormat } = require("./plugins");
 
 const parseIncomingRequest = (clientRequest, clientResponse) => {
-  const requestToFulfil = url.parse(clientRequest.url);
+  const { host, port, path } = url.parse(clientRequest.url);
 
   const options = {
     method: clientRequest.method,
     headers: clientRequest.headers,
-    host: requestToFulfil.host,
-    port: requestToFulfil.port || 80,
-    path: requestToFulfil.path,
+    host: host,
+    port: port || 80,
+    path: path,
   };
 
   if (blockedResources(options, allowedFormat)) {
