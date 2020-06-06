@@ -4,8 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint *.js",
-    "build": "node index.js"
+    "lint": "eslint *.js"
   },
   "husky": {
     "hooks": {
