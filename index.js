@@ -3,26 +3,31 @@ const url = require("url");
 const { blockedResources } = require("./middleware");
 const { logger } = require("./utils");
 const { allowedFormat } = require("./plugins");
-
+const { check } = require("./plugins");
+const auth = require("basic-auth");
 const parseIncomingRequest = (clientRequest, clientResponse) => {
   const { host, port, path } = url.parse(clientRequest.url);
-
+  const credentials = auth(clientRequest);
+  const { method, headers } = clientRequest;
   const options = {
-    method: clientRequest.method,
-    headers: clientRequest.headers,
+    method: method,
+    headers: headers,
     host: host,
     port: port || 80,
     path: path,
   };
-
-  if (blockedResources(options, allowedFormat)) {
-    options.allowed = false;
-    logger(options);
-    clientResponse.end();
+  if (!credentials || !check(credentials.name, credentials.pass)) {
+    clientResponse.statusCode = 401;
+    clientResponse.setHeader("WWW-Authenticate", 'Basic realm="example"');
+    clientResponse.end("Access denied");
   } else {
-    options.allowed = true;
+    options.allowed =
+      !blockedResources(options, allowedFormat) &&
+      Object.prototype.hasOwnProperty.call(options.headers, "proxy-connection");
     logger(options);
-    executeRequest(options, clientRequest, clientResponse);
+    options.allowed
+      ? executeRequest(options, clientRequest, clientResponse)
+      : clientResponse.end();
   }
 };
 

@@ -2,10 +2,31 @@
   "name": "proxy4",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint '**/*.js'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "license": "MIT",
   "dependencies": {
+    "basic-auth": "^2.0.1",
     "colors": "^1.4.0",
-    "http": "^0.0.1-security",
-    "url": "^0.11.0"
+    "tsscmp": "^1.0.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.1.0",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "lint-staged": "^10.2.9"
   }
 }
