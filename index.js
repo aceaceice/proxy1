@@ -42,4 +42,5 @@ const executeRequest = (options, clientRequest, clientResponse) => {
   clientRequest.pipe(externalRequest, { end: true });
 };
 const server = http.createServer(parseIncomingRequest);
-server.listen(5000);
+const PORT = process.env.PORT || 5000;
+server.listen(PORT);
