@@ -4,12 +4,10 @@ const { blockedResources } = require("./middleware");
 const { logger } = require("./utils");
 const { allowedFormat } = require("./plugins");
 const { check } = require("./plugins");
-const auth = require("basic-auth");
 const { proxyCheck } = require("./plugins");
-
+const { extractCredentials } = require("./plugins");
 const parseIncomingRequest = (clientRequest, clientResponse) => {
   const { host, port, path } = url.parse(clientRequest.url);
-  const credentials = auth(clientRequest);
   const { method, headers } = clientRequest;
   const options = {
     method: method,
@@ -18,10 +16,11 @@ const parseIncomingRequest = (clientRequest, clientResponse) => {
     port: port || 80,
     path: path,
   };
+  const credentials = extractCredentials(options);
   if (!credentials || !check(credentials.name, credentials.pass)) {
-    clientResponse.statusCode = 401;
+    clientResponse.statusCode = 407;
     clientResponse.setHeader(
-      "WWW-Authenticate",
+      "Proxy-Authenticate",
       'Basic realm="Access to the internal site"'
     );
     clientResponse.end("Access denied");
