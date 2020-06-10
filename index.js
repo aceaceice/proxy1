@@ -2,10 +2,13 @@ const http = require("http");
 const url = require("url");
 const { blockedResources } = require("./middleware");
 const { logger } = require("./utils");
-const { allowedFormat } = require("./plugins");
-const { check } = require("./plugins");
-const { proxyCheck } = require("./plugins");
-const { extractCredentials } = require("./plugins");
+const {
+  proxyCheck,
+  extractCredentials,
+  check,
+  allowedFormat,
+} = require("./plugins");
+
 const parseIncomingRequest = (clientRequest, clientResponse) => {
   const { host, port, path } = url.parse(clientRequest.url);
   const { method, headers } = clientRequest;
@@ -25,6 +28,8 @@ const parseIncomingRequest = (clientRequest, clientResponse) => {
     );
     clientResponse.end("Access denied");
   } else {
+    console.log(options.headers);
+
     options.allowed =
       !blockedResources(options, allowedFormat) && proxyCheck(options.headers);
     logger(options);
