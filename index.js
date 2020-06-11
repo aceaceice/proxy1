@@ -21,20 +21,20 @@ const parseIncomingRequest = (clientRequest, clientResponse) => {
   };
   const credentials = extractCredentials(options);
   if (!credentials || !check(credentials.name, credentials.pass)) {
-    clientResponse.statusCode = 407;
+    clientResponse.statusCode = 200;
     clientResponse.setHeader(
       "Proxy-Authenticate",
       'Basic realm="Access to the internal site"'
     );
+    clientResponse.send("Proxy auth required");
     clientResponse.end("Access denied");
-  } else {
-    options.allowed =
-      !blockedResources(options, allowedFormat) && proxyCheck(options.headers);
-    logger(options);
-    options.allowed
-      ? executeRequest(options, clientRequest, clientResponse)
-      : clientResponse.end();
   }
+  options.allowed =
+    !blockedResources(options, allowedFormat) && proxyCheck(options.headers);
+  logger(options);
+  options.allowed
+    ? executeRequest(options, clientRequest, clientResponse)
+    : clientResponse.end();
 };
 
 const executeRequest = (options, clientRequest, clientResponse) => {
