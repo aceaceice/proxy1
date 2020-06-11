@@ -13,11 +13,11 @@ const parseIncomingRequest = (clientRequest, clientResponse) => {
   const { host, port, path } = url.parse(clientRequest.url);
   const { method, headers } = clientRequest;
   const options = {
-    method: method,
-    headers: headers,
-    host: host,
+    method,
+    headers,
+    host,
     port: port || 80,
-    path: path,
+    path,
   };
   const credentials = extractCredentials(options);
   if (!credentials || !check(credentials.name, credentials.pass)) {
@@ -28,8 +28,6 @@ const parseIncomingRequest = (clientRequest, clientResponse) => {
     );
     clientResponse.end("Access denied");
   } else {
-    console.log(options.headers);
-
     options.allowed =
       !blockedResources(options, allowedFormat) && proxyCheck(options.headers);
     logger(options);
