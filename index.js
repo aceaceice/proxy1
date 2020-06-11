@@ -28,8 +28,6 @@ const parseIncomingRequest = (clientRequest, clientResponse) => {
     );
     clientResponse.end("Access denied");
   } else {
-    console.log(options.headers);
-
     options.allowed =
       !blockedResources(options, allowedFormat) && proxyCheck(options.headers);
     logger(options);
