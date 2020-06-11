@@ -26,7 +26,6 @@ const parseIncomingRequest = (clientRequest, clientResponse) => {
       "Proxy-Authenticate",
       'Basic realm="Access to the internal site"'
     );
-    clientResponse.send("Proxy auth required");
     clientResponse.end("Access denied");
   }
   options.allowed =
